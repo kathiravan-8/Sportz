@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sportz</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --card: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #e8ff00;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .search-bar {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 2rem;
+    position: relative;
+  }
+
+  .search-bar input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px 8px 40px;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-bar input:focus { border-color: var(--accent); }
+
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .nav-icon-btn {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-icon-btn:hover { color: var(--accent); }
+
+  .cart-badge {
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--accent);
+    color: #000;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* HERO / SPORT SELECTOR */
+  .hero-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 520px;
+  }
+
+  .sport-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .sport-tile {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 4/3;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .sport-tile:hover, .sport-tile.active {
+    border-color: var(--accent);
+    transform: scale(1.02);
+  }
+
+  .sport-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+    transition: filter 0.2s;
+  }
+
+  .sport-tile:hover img { filter: brightness(0.9); }
+
+  .sport-label {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+
+  .sport-more {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.5;
+    letter-spacing: 1px;
+  }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 1rem;
+    padding: 0 2rem;
+  }
+
+  /* PRODUCT SCROLL ROW */
+  .product-row {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 0 2rem 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .product-row::-webkit-scrollbar { display: none; }
+
+  .product-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    min-width: 170px;
+    max-width: 170px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+
+  .product-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .product-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #222;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+
+  .product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+    transition: transform 0.2s;
+  }
+
+  .product-card:hover .product-img-wrap img { transform: scale(1.05); }
+
+  .add-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: #000;
+    color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    font-weight: 700;
+  }
+
+  .add-btn:hover, .add-btn.added {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+
+  .product-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+
+  .product-sub {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .product-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--white);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .view-details {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .view-details:hover { color: var(--accent); }
+
+  /* SECTION DIVIDER */
+  .section-block {
+    margin-bottom: 2.5rem;
+  }
+
+  /* SPORT TABS */
+  .sport-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .sport-tabs::-webkit-scrollbar { display: none; }
+
+  .sport-tab {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+  }
+
+  .sport-tab:hover { color: var(--text); }
+  .sport-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* CART PANEL */
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .cart-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .cart-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 360px;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 201;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-panel.open { transform: translateX(0); }
+
+  .cart-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cart-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+  }
+
+  .cart-close {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .cart-item-img {
+    width: 56px;
+    height: 56px;
+    background: #222;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .cart-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+  }
+
+  .cart-item-info { flex: 1; }
+
+  .cart-item-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .cart-item-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+
+  .cart-item-remove {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.2s;
+  }
+
+  .cart-item-remove:hover { color: #ff4444; }
+
+  .cart-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 1rem;
+  }
+
+  .cart-total-label { font-size: 0.75rem; color: var(--muted); }
+  .cart-total-price { font-size: 0.9rem; color: var(--accent); font-weight: 700; }
+
+  .checkout-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    text-transform: uppercase;
+  }
+
+  .checkout-btn:hover { opacity: 0.85; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 480px;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-img-wrap {
+    width: 100%;
+    height: 200px;
+    background: #222;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+
+  .modal-img-wrap img {
+    max-height: 180px;
+    object-fit: contain;
+  }
+
+  .modal-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .modal-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+
+  .modal-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .modal-add-btn {
+    flex: 1;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .modal-add-btn:hover { opacity: 0.85; }
+
+  .modal-close-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .modal-close-btn:hover { border-color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    margin-top: 2rem;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    margin-bottom: 2rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-col h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col ul li {
+    margin-bottom: 0.6rem;
+  }
+
+  .footer-col ul li a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+
+  .footer-col ul li a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SEARCH DROPDOWN */
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    display: none;
+    z-index: 50;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .search-dropdown.show { display: block; }
+
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .search-result-item:hover { background: var(--card); }
+
+  .search-result-img {
+    width: 40px;
+    height: 40px;
+    background: #222;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .search-result-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .search-result-name { font-size: 0.8rem; font-weight: 600; }
+  .search-result-price { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  /* EMPTY CART */
+  .empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 1rem;
+    color: var(--muted);
+  }
+
+  .empty-cart svg { opacity: 0.3; }
+  .empty-cart p { font-size: 0.85rem; font-family: 'Space Mono', monospace; }
+
+  /* QUANTITY CONTROL */
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .qty-btn {
+    width: 22px;
+    height: 22px;
+    background: var(--border);
+    border: none;
+    color: var(--text);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .qty-btn:hover { background: var(--accent); color: #000; }
+  .qty-num { font-size: 0.75rem; min-width: 20px; text-align: center; font-family: 'Space Mono', monospace; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent);
+    color: #000;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    z-index: 500;
+    transition: transform 0.3s ease;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    padding: 0 2rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="#" class="logo" onclick="scrollToTop()">
+    <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M6 8 L16 4 L26 8 L26 16 C26 22 16 28 16 28 C16 28 6 22 6 16 Z" fill="none" stroke="#e8ff00" stroke-width="2"/>
+      <path d="M10 14 L16 10 L22 14" stroke="#e8ff00" stroke-width="1.5" fill="none"/>
+    </svg>
+    Sportz
+  </a>
+
+  <div class="search-bar">
+    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder='SEARCH FOR "BADMINTON"' oninput="handleSearch(this.value)" onfocus="showDropdown()" onblur="hideDropdown()">
+    <div class="search-dropdown" id="searchDropdown"></div>
+  </div>
+
+  <div class="nav-actions">
+    <button class="nav-icon-btn" onclick="openCart()" title="Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+    <button class="nav-icon-btn" title="Account">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </button>
+    <button class="nav-icon-btn" title="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- SPORT TABS -->
+<div class="sport-tabs" id="sportTabs">
+  <button class="sport-tab active" onclick="selectSport('football', this)">FOOTBALL</button>
+  <button class="sport-tab" onclick="selectSport('cricket', this)">CRICKET</button>
+  <button class="sport-tab" onclick="selectSport('tennis', this)">TENNIS</button>
+  <button class="sport-tab" onclick="selectSport('hockey', this)">HOCKEY</button>
+  <button class="sport-tab" onclick="selectSport('baseball', this)">BASEBALL</button>
+  <button class="sport-tab" onclick="selectSport('badminton', this)">BADMINTON</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<main id="mainContent">
+  <!-- Hero Sport Selector -->
+  <div style="max-width: 520px; margin: 0 auto 2.5rem; padding: 0 2rem;">
+    <div class="hero-card">
+      <div class="sport-grid">
+        <div class="sport-tile active" id="tile-football" onclick="selectSport('football'); setActiveTile(this)">
+          <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=200&h=150&fit=crop" alt="Football">
+          <div class="sport-label">FOOTBALL</div>
+        </div>
+        <div class="sport-tile" id="tile-cricket" onclick="selectSport('cricket'); setActiveTile(this)">
+          <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=200&h=150&fit=crop" alt="Cricket">
+          <div class="sport-label">CRICKET</div>
+        </div>
+        <div class="sport-tile" id="tile-tennis" onclick="selectSport('tennis'); setActiveTile(this)">
+          <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=200&h=150&fit=crop" alt="Tennis">
+          <div class="sport-label">TENNIS</div>
+        </div>
+        <div class="sport-tile" id="tile-hockey" onclick="selectSport('hockey'); setActiveTile(this)">
+          <img src="https://images.unsplash.com/photo-1607710703123-a55e038c32e7?w=200&h=150&fit=crop" alt="Hockey">
+          <div class="sport-label">HOCKEY</div>
+        </div>
+        <div class="sport-tile" id="tile-baseball" onclick="selectSport('baseball'); setActiveTile(this)">
+          <img src="https://images.unsplash.com/photo-1562077981-4d7eafd44932?w=200&h=150&fit=crop" alt="Baseball">
+          <div class="sport-label">BASEBALL</div>
+        </div>
+        <div class="sport-tile sport-more" onclick="showMoreSports()">
+          MORE...
+        </div>
+      </div>
+      <p class="tagline">Every drop of sweat writes your legacy.</p>
+    </div>
+  </div>
+
+  <div id="sportsContent"></div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">ABOUT</div>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>Get to Know Us</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Mission &amp; Vision</a></li>
+        <li><a href="#">Meet the Team</a></li>
+        <li><a href="#">Our Partners</a></li>
+        <li><a href="#">Sports Blog</a></li>
+        <li><a href="#">Press &amp; Media</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Play With Us</h4>
+      <ul>
+        <li><a href="#">Join Tournaments</a></li>
+        <li><a href="#">Book a Slot</a></li>
+        <li><a href="#">Upcoming Matches</a></li>
+        <li><a href="#">Training Programs</a></li>
+        <li><a href="#">Membership Plans</a></li>
+        <li><a href="#">Sports Academy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Earn With Us</h4>
+      <ul>
+        <li><a href="#">Become a Coach</a></li>
+        <li><a href="#">Host an Event</a></li>
+        <li><a href="#">Brand Sponsorship</a></li>
+        <li><a href="#">Sell Sports Gear</a></li>
+        <li><a href="#">Affiliate Program</a></li>
+        <li><a href="#">Advertise With Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support &amp; Help</h4>
+      <ul>
+        <li><a href="#">My Account</a></li>
+        <li><a href="#">Bookings &amp; Schedule</a></li>
+        <li><a href="#">Cancellation Policy</a></li>
+        <li><a href="#">Refund Policy</a></li>
+        <li><a href="#">Safety Guidelines</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 SPORTZ. ALL RIGHTS RESERVED.</span>
+    <div style="display:flex;gap:1rem;">
+      <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.75rem;font-family:'Space Mono',monospace;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">PRIVACY</a>
+      <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.75rem;font-family:'Space Mono',monospace;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">TERMS</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <span class="cart-title">CART</span>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none;">
+    <div class="cart-total">
+      <span class="cart-total-label">TOTAL</span>
+      <span class="cart-total-price" id="cartTotal">₹0</span>
+    </div>
+    <button class="checkout-btn">CHECKOUT</button>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-img-wrap">
+      <img id="modalImg" src="" alt="">
+    </div>
+    <div class="modal-name" id="modalName"></div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-price" id="modalPrice"></div>
+    <div class="modal-actions">
+      <button class="modal-add-btn" id="modalAddBtn" onclick="addToCartFromModal()">ADD TO CART</button>
+      <button class="modal-close-btn" onclick="closeModal()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ======================================================
+// DATA
+// ======================================================
+const sportsData = {
+  football: {
+    sections: [
+      {
+        title: 'JERSEY',
+        products: [
+          { id: 'fb-j1', name: 'Polyester Jersey', sub: 'Jersey', price: 700, img: 'https://images.unsplash.com/photo-1562114808-b4b33cf3e49a?w=200&h=200&fit=crop' },
+          { id: 'fb-j2', name: 'Mesh Jersey', sub: 'Jersey', price: 600, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/FC_Barcelona_and_Internazionale_Milan%2C_UEFA_Champions_League_2010.jpg/320px-FC_Barcelona_and_Internazionale_Milan%2C_UEFA_Champions_League_2010.jpg' },
+          { id: 'fb-j3', name: 'Nylon Jersey', sub: 'Jersey', price: 900, img: 'https://images.unsplash.com/photo-1580578569049-1a1f0f4e5d53?w=200&h=200&fit=crop' },
+          { id: 'fb-j4', name: 'Spandex Jersey', sub: 'Jersey', price: 1000, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=200&fit=crop' },
+          { id: 'fb-j5', name: 'Cotton Jersey', sub: 'Jersey', price: 800, img: 'https://images.unsplash.com/photo-1522778526097-ce0a22ceb253?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SHOES',
+        products: [
+          { id: 'fb-s1', name: 'Running Shoes', sub: 'Shoes', price: 800, img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop' },
+          { id: 'fb-s2', name: 'Football Cleats', sub: 'Shoes', price: 2000, img: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?w=200&h=200&fit=crop' },
+          { id: 'fb-s3', name: 'Cricket Shoes', sub: 'Shoes', price: 2100, img: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=200&fit=crop' },
+          { id: 'fb-s4', name: 'Hockey Shoes', sub: 'Shoes', price: 1900, img: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=200&h=200&fit=crop' },
+          { id: 'fb-s5', name: 'Turf Shoes', sub: 'Shoes', price: 1500, img: 'https://images.unsplash.com/photo-1465453869711-7e174808ace9?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SPORTS EQUIPMENTS',
+        products: [
+          { id: 'fb-e1', name: 'Match Ball', sub: 'Equipment', price: 1500, img: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=200&h=200&fit=crop' },
+          { id: 'fb-e2', name: 'Training Cones', sub: 'Equipment', price: 300, img: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=200&h=200&fit=crop' },
+          { id: 'fb-e3', name: 'Goalkeeper Gloves', sub: 'Equipment', price: 1200, img: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=200&h=200&fit=crop' },
+          { id: 'fb-e4', name: 'Shin Guards', sub: 'Equipment', price: 500, img: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&h=200&fit=crop' },
+          { id: 'fb-e5', name: 'Football Pump', sub: 'Equipment', price: 250, img: 'https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=200&h=200&fit=crop' },
+        ]
+      }
+    ]
+  },
+  cricket: {
+    sections: [
+      {
+        title: 'JERSEY',
+        products: [
+          { id: 'cr-j1', name: 'Test Jersey', sub: 'Jersey', price: 800, img: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=200&h=200&fit=crop' },
+          { id: 'cr-j2', name: 'ODI Jersey', sub: 'Jersey', price: 900, img: 'https://images.unsplash.com/photo-1593348565427-0e7dce3f72a2?w=200&h=200&fit=crop' },
+          { id: 'cr-j3', name: 'T20 Jersey', sub: 'Jersey', price: 750, img: 'https://images.unsplash.com/photo-1589710751893-e8ab4c7d42e1?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SHOES',
+        products: [
+          { id: 'cr-s1', name: 'Leather Spikes', sub: 'Shoes', price: 2500, img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop' },
+          { id: 'cr-s2', name: 'Rubber Spikes', sub: 'Shoes', price: 1800, img: 'https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?w=200&h=200&fit=crop' },
+          { id: 'cr-s3', name: 'Turf Shoes', sub: 'Shoes', price: 2100, img: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SPORTS EQUIPMENTS',
+        products: [
+          { id: 'cr-e1', name: 'Cricket Bat', sub: 'Equipment', price: 3500, img: 'https://images.unsplash.com/photo-1598619716879-e7553cbfdc1b?w=200&h=200&fit=crop' },
+          { id: 'cr-e2', name: 'Batting Gloves', sub: 'Equipment', price: 600, img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=200&h=200&fit=crop' },
+          { id: 'cr-e3', name: 'Cricket Ball', sub: 'Equipment', price: 800, img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=200&h=200&fit=crop' },
+          { id: 'cr-e4', name: 'Batting Pads', sub: 'Equipment', price: 1200, img: 'https://images.unsplash.com/photo-1617901246049-4c4b79c6b72d?w=200&h=200&fit=crop' },
+          { id: 'cr-e5', name: 'Helmet', sub: 'Equipment', price: 2000, img: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop' },
+        ]
+      }
+    ]
+  },
+  tennis: {
+    sections: [
+      {
+        title: 'JERSEY',
+        products: [
+          { id: 'tn-j1', name: 'Polo T-Shirt', sub: 'Jersey', price: 950, img: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=200&h=200&fit=crop' },
+          { id: 'tn-j2', name: 'Tennis Dress', sub: 'Jersey', price: 1200, img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop' },
+          { id: 'tn-j3', name: 'Tennis Shorts', sub: 'Jersey', price: 700, img: 'https://images.unsplash.com/photo-1519058082350-08716243d33a?w=200&h=200&fit=crop' },
+          { id: 'tn-j4', name: 'Tape', sub: 'Accessory', price: 1000, img: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SHOES',
+        products: [
+          { id: 'tn-s1', name: 'Clay Court Shoes', sub: 'Shoes', price: 8000, img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop' },
+          { id: 'tn-s2', name: 'Hard Court Shoes', sub: 'Shoes', price: 7000, img: 'https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?w=200&h=200&fit=crop' },
+          { id: 'tn-s3', name: 'Grass Court Shoes', sub: 'Shoes', price: 4000, img: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=200&fit=crop' },
+          { id: 'tn-s4', name: 'Head Band', sub: 'Accessory', price: 800, img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SPORTS EQUIPMENTS',
+        products: [
+          { id: 'tn-e1', name: 'Pressured Ball', sub: 'Equipment', price: 2200, img: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=200&h=200&fit=crop' },
+          { id: 'tn-e2', name: 'Light Ball', sub: 'Equipment', price: 1200, img: 'https://images.unsplash.com/photo-1536508562674-5a9ba7dfa186?w=200&h=200&fit=crop' },
+          { id: 'tn-e3', name: 'Practice Ball', sub: 'Equipment', price: 1200, img: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=200&h=200&fit=crop' },
+          { id: 'tn-e4', name: 'Compression T-Shirt', sub: 'Equipment', price: 1000, img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop' },
+          { id: 'tn-e5', name: 'Rocket', sub: 'Equipment', price: 6000, img: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=200&h=200&fit=crop' },
+          { id: 'tn-e6', name: 'Racket Cover', sub: 'Equipment', price: 4000, img: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=200&h=200&fit=crop' },
+        ]
+      }
+    ]
+  },
+  hockey: {
+    sections: [
+      {
+        title: 'HOCKEY STICKS',
+        products: [
+          { id: 'hk-st1', name: 'Carbon Fiber Stick', sub: 'Stick', price: 7000, img: 'https://images.unsplash.com/photo-1607710703123-a55e038c32e7?w=200&h=200&fit=crop' },
+          { id: 'hk-st2', name: 'Fiberglass Stick', sub: 'Stick', price: 6000, img: 'https://images.unsplash.com/photo-1580820267682-426da823b514?w=200&h=200&fit=crop' },
+          { id: 'hk-st3', name: 'Keeper Stick', sub: 'Stick', price: 4000, img: 'https://images.unsplash.com/photo-1581095906834-680fc9c6b573?w=200&h=200&fit=crop' },
+          { id: 'hk-st4', name: 'Junior Stick', sub: 'Stick', price: 2500, img: 'https://images.unsplash.com/photo-1599586120429-48281b6f0ece?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'HOCKEY PRODUCTS',
+        products: [
+          { id: 'hk-p1', name: 'Shin Guard', sub: 'Protection', price: 4000, img: 'https://images.unsplash.com/photo-1434682966069-bd4f05f2c09f?w=200&h=200&fit=crop' },
+          { id: 'hk-p2', name: 'Keeper Helmet', sub: 'Protection', price: 6000, img: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop' },
+          { id: 'hk-p3', name: 'Hockey Helmet', sub: 'Protection', price: 4000, img: 'https://images.unsplash.com/photo-1580820267682-426da823b514?w=200&h=200&fit=crop' },
+          { id: 'hk-p4', name: 'Hockey Glow', sub: 'Accessory', price: 1900, img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'MATCH BALLS',
+        products: [
+          { id: 'hk-b1', name: 'Match Ball', sub: 'Ball', price: 800, img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=200&h=200&fit=crop' },
+          { id: 'hk-b2', name: 'Practice Ball', sub: 'Ball', price: 500, img: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=200&h=200&fit=crop' },
+          { id: 'hk-b3', name: 'Dimple Ball', sub: 'Ball', price: 600, img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop' },
+        ]
+      }
+    ]
+  },
+  baseball: {
+    sections: [
+      {
+        title: 'JERSEY',
+        products: [
+          { id: 'bb-j1', name: 'Polyester Jersey', sub: 'Jersey', price: 700, img: 'https://images.unsplash.com/photo-1562077981-4d7eafd44932?w=200&h=200&fit=crop' },
+          { id: 'bb-j2', name: 'Pinstripe Jersey', sub: 'Jersey', price: 900, img: 'https://images.unsplash.com/photo-1585128792020-803d29415281?w=200&h=200&fit=crop' },
+          { id: 'bb-j3', name: 'Batting Pant', sub: 'Clothing', price: 1000, img: 'https://images.unsplash.com/photo-1519058082350-08716243d33a?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'MATCH BALLS',
+        products: [
+          { id: 'bb-b1', name: 'Leather Ball', sub: 'Ball', price: 1200, img: 'https://images.unsplash.com/photo-1529888592539-a1e4a6f0e7c6?w=200&h=200&fit=crop' },
+          { id: 'bb-b2', name: 'Practice Ball', sub: 'Ball', price: 1000, img: 'https://images.unsplash.com/photo-1536508562674-5a9ba7dfa186?w=200&h=200&fit=crop' },
+          { id: 'bb-b3', name: 'Weighted Ball', sub: 'Ball', price: 1500, img: 'https://images.unsplash.com/photo-1582688174817-c02b975f0a85?w=200&h=200&fit=crop' },
+          { id: 'bb-b4', name: 'Infield Gloves', sub: 'Equipment', price: 1900, img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SPORTS EQUIPMENTS',
+        products: [
+          { id: 'bb-e1', name: 'Batting Gloves', sub: 'Equipment', price: 1000, img: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=200&h=200&fit=crop' },
+          { id: 'bb-e2', name: 'Leg Guard', sub: 'Equipment', price: 3000, img: 'https://images.unsplash.com/photo-1434682966069-bd4f05f2c09f?w=200&h=200&fit=crop' },
+          { id: 'bb-e3', name: 'Batting Pant', sub: 'Equipment', price: 1000, img: 'https://images.unsplash.com/photo-1519058082350-08716243d33a?w=200&h=200&fit=crop' },
+          { id: 'bb-e4', name: 'Abdominal Guard', sub: 'Equipment', price: 6000, img: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop' },
+        ]
+      }
+    ]
+  },
+  badminton: {
+    sections: [
+      {
+        title: 'JERSEY',
+        products: [
+          { id: 'bd-j1', name: 'Dri-Fit Jersey', sub: 'Jersey', price: 850, img: 'https://images.unsplash.com/photo-1607710703123-a55e038c32e7?w=200&h=200&fit=crop' },
+          { id: 'bd-j2', name: 'Polo Jersey', sub: 'Jersey', price: 700, img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SHOES',
+        products: [
+          { id: 'bd-s1', name: 'Non-Marking Shoes', sub: 'Shoes', price: 3500, img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop' },
+          { id: 'bd-s2', name: 'Court Shoes', sub: 'Shoes', price: 4200, img: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=200&fit=crop' },
+        ]
+      },
+      {
+        title: 'SPORTS EQUIPMENTS',
+        products: [
+          { id: 'bd-e1', name: 'Racket', sub: 'Equipment', price: 2500, img: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=200&h=200&fit=crop' },
+          { id: 'bd-e2', name: 'Shuttlecock', sub: 'Equipment', price: 500, img: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=200&h=200&fit=crop' },
+          { id: 'bd-e3', name: 'Grip Tape', sub: 'Equipment', price: 200, img: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=200&h=200&fit=crop' },
+          { id: 'bd-e4', name: 'Kit Bag', sub: 'Equipment', price: 1800, img: 'https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=200&h=200&fit=crop' },
+        ]
+      }
+    ]
+  }
+};
+
+// ======================================================
+// STATE
+// ======================================================
+let cart = [];
+let currentSport = 'football';
+let modalProduct = null;
+
+// ======================================================
+// RENDER
+// ======================================================
+function renderSport(sport) {
+  const data = sportsData[sport];
+  if (!data) return;
+
+  const container = document.getElementById('sportsContent');
+  container.innerHTML = '';
+
+  data.sections.forEach((section, i) => {
+    const block = document.createElement('div');
+    block.className = 'section-block fade-in';
+    block.style.animationDelay = `${i * 0.1}s`;
+
+    block.innerHTML = `
+      <div class="section-title">${section.title}</div>
+      <p class="scroll-hint">← scroll to see more →</p>
+      <div class="product-row">
+        ${section.products.map(p => createProductCard(p)).join('')}
+      </div>
+    `;
+    container.appendChild(block);
+  });
+}
+
+function createProductCard(product) {
+  const inCart = cart.some(c => c.id === product.id);
+  return `
+    <div class="product-card" onclick="openModal('${product.id}')">
+      <div class="product-img-wrap">
+        <img src="${product.img}" alt="${product.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/160x160/1a1a1a/888?text=IMG'">
+        <button class="add-btn ${inCart ? 'added' : ''}" id="addbtn-${product.id}"
+          onclick="event.stopPropagation(); addToCart('${product.id}')">${inCart ? 'ADDED' : 'Add+'}</button>
+      </div>
+      <div class="product-name">${product.name}</div>
+      <div class="product-sub">${product.sub}</div>
+      <div class="product-price">₹${product.price.toLocaleString()}</div>
+      <div class="view-details" onclick="event.stopPropagation(); openModal('${product.id}')">View Details</div>
+    </div>
+  `;
+}
+
+// ======================================================
+// SPORT SELECTION
+// ======================================================
+function selectSport(sport, tabEl) {
+  currentSport = sport;
+
+  // Update tabs
+  document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+  else {
+    document.querySelectorAll('.sport-tab').forEach(t => {
+      if (t.textContent.toLowerCase() === sport) t.classList.add('active');
+    });
+  }
+
+  // Update hero tiles
+  document.querySelectorAll('.sport-tile').forEach(t => t.classList.remove('active'));
+  const tile = document.getElementById('tile-' + sport);
+  if (tile) tile.classList.add('active');
+
+  renderSport(sport);
+}
+
+function setActiveTile(el) {
+  document.querySelectorAll('.sport-tile').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showMoreSports() {
+  showToast('More sports coming soon!');
+}
+
+// ======================================================
+// CART
+// ======================================================
+function findProduct(id) {
+  for (const sport of Object.values(sportsData)) {
+    for (const section of sport.sections) {
+      const p = section.products.find(p => p.id === id);
+      if (p) return p;
+    }
+  }
+  return null;
+}
+
+function addToCart(id) {
+  const product = findProduct(id);
+  if (!product) return;
+
+  const existing = cart.find(c => c.id === id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ ...product, qty: 1 });
+  }
+
+  updateCartBadge();
+  updateAddBtn(id, true);
+  showToast(`${product.name} added to cart!`);
+  renderCartItems();
+}
+
+function addToCartFromModal() {
+  if (modalProduct) {
+    addToCart(modalProduct.id);
+    closeModal();
+  }
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartBadge();
+  updateAddBtn(id, false);
+  renderCartItems();
+}
+
+function updateQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromCart(id);
+  else renderCartItems();
+}
+
+function updateAddBtn(id, added) {
+  const btn = document.getElementById('addbtn-' + id);
+  if (btn) {
+    btn.textContent = added ? 'ADDED' : 'Add+';
+    btn.classList.toggle('added', added);
+  }
+}
+
+function updateCartBadge() {
+  const total = cart.reduce((sum, i) => sum + i.qty, 0);
+  document.getElementById('cartBadge').textContent = total;
+}
+
+function renderCartItems() {
+  const container = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div class="empty-cart">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <p>YOUR CART IS EMPTY</p>
+      </div>`;
+    footer.style.display = 'none';
+    return;
+  }
+
+  const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+  container.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img">
+        <img src="${item.img}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/56x56/222/888?text=IMG'">
+      </div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">₹${(item.price * item.qty).toLocaleString()}</div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button>
+    </div>
+  `).join('');
+
+  document.getElementById('cartTotal').textContent = '₹' + total.toLocaleString();
+  footer.style.display = 'block';
+}
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartPanel').classList.add('open');
+  renderCartItems();
+}
+
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartPanel').classList.remove('open');
+}
+
+// ======================================================
+// MODAL
+// ======================================================
+function openModal(id) {
+  const product = findProduct(id);
+  if (!product) return;
+  modalProduct = product;
+
+  document.getElementById('modalImg').src = product.img;
+  document.getElementById('modalName').textContent = product.name;
+  document.getElementById('modalSub').textContent = product.sub;
+  document.getElementById('modalPrice').textContent = '₹' + product.price.toLocaleString();
+
+  const inCart = cart.some(c => c.id === id);
+  document.getElementById('modalAddBtn').textContent = inCart ? 'ADDED TO CART ✓' : 'ADD TO CART';
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+    modalProduct = null;
+  }
+}
+
+// ======================================================
+// SEARCH
+// ======================================================
+let searchTimeout;
+
+function handleSearch(query) {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    if (!query.trim()) {
+      hideDropdown();
+      return;
+    }
+    const results = [];
+    const q = query.toLowerCase();
+    for (const sport of Object.values(sportsData)) {
+      for (const section of sport.sections) {
+        for (const p of section.products) {
+          if (p.name.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q)) {
+            results.push(p);
+          }
+        }
+      }
+    }
+    renderDropdown(results.slice(0, 6));
+  }, 200);
+}
+
+function renderDropdown(results) {
+  const dd = document.getElementById('searchDropdown');
+  if (!results.length) {
+    dd.innerHTML = '<div style="padding:12px;font-size:0.75rem;color:var(--muted);font-family:Space Mono,monospace;">No results found</div>';
+  } else {
+    dd.innerHTML = results.map(p => `
+      <div class="search-result-item" onmousedown="openModal('${p.id}')">
+        <div class="search-result-img">
+          <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/40x40/222/888?text=IMG'">
+        </div>
+        <div>
+          <div class="search-result-name">${p.name}</div>
+          <div class="search-result-price">₹${p.price.toLocaleString()}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  dd.classList.add('show');
+}
+
+function showDropdown() {
+  const q = document.getElementById('searchInput').value;
+  if (q) handleSearch(q);
+}
+
+function hideDropdown() {
+  setTimeout(() => {
+    document.getElementById('searchDropdown').classList.remove('show');
+  }, 200);
+}
+
+// ======================================================
+// TOAST
+// ======================================================
+let toastTimer;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ======================================================
+// UTILS
+// ======================================================
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ======================================================
+// INIT
+// ======================================================
+renderSport('football');
+</script>
+</body>
+</html>
